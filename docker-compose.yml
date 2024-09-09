@@ -1,0 +1,29 @@
+
+services:
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    restart: always
+    ports:
+      - "3000:3000"
+
+  streamlit:
+    build: ./streamlit
+    container_name: streamlit
+    expose:
+      - 8501
+    restart: always
+    ports:
+      - "8501:8501"
+    depends_on:
+      - auth-service
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8000:80"
+    restart: always
+    depends_on:
+      - auth-service
+      - streamlit
